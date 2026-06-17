@@ -1,16 +1,27 @@
-# React + Vite
+# 🎵 Fake Music Store - Frontend 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the client-side of the Fake Music Store application, designed exclusively as a mobile-first interface. It features interactive data layouts, real-time audio playback, and fluid infinity scrolling.
 
-Currently, two official plugins are available:
+## 🛠️ Tech Stack
+* **Framework:** React 19
+* **Build Tool:** Vite
+* **Styling & UI:** Tailwind CSS v4 & daisyUI
+* **Icons & Assets:** Heroicons / Standard Emojis
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Key Features (Frontend)
+* **Dual View Modes:** Smooth toggling between a structured Table View and a modern Card-based Gallery View.
+* **Infinite Scroll:** Automated page-incrementation and seamless data fetching inside the Gallery View.
+* **Web Audio API Synthesis:** Real-time browser-based synth engine that plays unique melodies utilizing the backend's seed properties without any external audio libraries.
+* **Interactive Toolbars:** Fully functional controls for Seed configuration, Region/Language swapping, and Average Likes sliders.
 
-## React Compiler
+## 🚀 How to Run Locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Install the dependencies:
+  Bash
+  npm install
+3. Start the Vite local development server:
+  Bash
+  npm run dev
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+3. Open your browser and navigate to the local link provided by Vite 
+  (usually http://localhost:5173).
