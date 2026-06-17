@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 
 const playSongTune = (audioProps) => {
-  if (!audioProps) return;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
 
   const ctx = new AudioContext();
   let time = ctx.currentTime;
-  const notes = audioProps.melody || ['C5', 'E5', 'G5'];
+
+  const notes = audioProps?.melody || ['C5', 'E5', 'G5', 'C4'];
   
   notes.slice(0, 4).forEach((note, index) => {
     const osc = ctx.createOscillator();
@@ -30,6 +30,7 @@ const playSongTune = (audioProps) => {
 };
 
 export default function SongGallery({ songs, params, setParams, loading }) {
+  
   useEffect(() => {
     if (params.viewMode !== 'gallery') return;
 
@@ -54,7 +55,6 @@ export default function SongGallery({ songs, params, setParams, loading }) {
             key={song.id} 
             className="card bg-base-100 shadow-xl border hover:shadow-2xl transition-all duration-300 group overflow-hidden"
           >
-            {/* ডাইনামিক অ্যালবাম কভার আর্ট (অপশনাল চেইনিং সহ যেন ক্র্যাশ না করে) */}
             <div 
               className="h-48 flex flex-col justify-between p-4 text-white font-black relative overflow-hidden shrink-0"
               style={{ background: song.coverProps?.bgGradient || 'linear-gradient(45deg, #1e3a8a, #3b82f6)' }}
@@ -68,7 +68,6 @@ export default function SongGallery({ songs, params, setParams, loading }) {
               />
               <span className="text-xs uppercase tracking-widest opacity-75 z-10">{song.genre}</span>
               
-              {/* 🎯 প্লে বাটন এক্টিভেট করা হলো */}
               <button 
                 className="btn btn-circle btn-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg z-20 text-lg"
                 onClick={() => playSongTune(song.audioProps)}
@@ -79,7 +78,6 @@ export default function SongGallery({ songs, params, setParams, loading }) {
               <span className="text-right text-xs font-mono z-10">❤️ {song.likes}</span>
             </div>
 
-            {/*カード Body */}
             <div className="card-body p-4 space-y-1">
               <h2 className="card-title text-base font-bold line-clamp-1 group-hover:text-primary transition-colors">
                 {song.title}
