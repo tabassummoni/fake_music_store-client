@@ -1,14 +1,26 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const playSongTune = (audioProps) => {
+const playSongTuneHelper = (audioProps, songId, setPlayingId, setProgress) => {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
 
   const ctx = new AudioContext();
   let time = ctx.currentTime;
-
   const notes = audioProps?.melody || ['C5', 'E5', 'G5', 'C4'];
   
+  setPlayingId(songId);
+  setProgress(0);
+
+  const startTime = Date.now();
+  const duration = 1500;
+
+  const progressInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const percentage = Math.min((elapsed / duration) * 100, 100);
+    setProgress(percentage);
+    if (elapsed >= duration) clearInterval(progressInterval);
+  }, 30);
+
   notes.slice(0, 4).forEach((note, index) => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -27,10 +39,17 @@ const playSongTune = (audioProps) => {
     osc.stop(time + 0.5);
     time += 0.3;
   });
+
+  setTimeout(() => {
+    setPlayingId(null);
+    setProgress(0);
+  }, duration);
 };
 
 export default function SongGallery({ songs, params, setParams, loading }) {
-  
+  const [playingId, setPlayingId] = useState(null);
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
     if (params.viewMode !== 'gallery') return;
 
@@ -69,26 +88,48 @@ export default function SongGallery({ songs, params, setParams, loading }) {
               <span className="text-xs uppercase tracking-widest opacity-75 z-10">{song.genre}</span>
               
               <button 
-                className="btn btn-circle btn-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg z-20 text-lg"
-                onClick={() => playSongTune(song.audioProps)}
+                className={`btn btn-circle btn-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg text-lg z-20 transition-opacity duration-300 ${playingId === song.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                onClick={() => playSongTuneHelper(song.audioProps, song.id, setPlayingId, setProgress)}
+                disabled={playingId === song.id}
               >
-                ▶️
+                {playingId === song.id ? '🔊' : '▶️'}
               </button>
               
               <span className="text-right text-xs font-mono z-10">❤️ {song.likes}</span>
             </div>
 
-            <div className="card-body p-4 space-y-1">
-              <h2 className="card-title text-base font-bold line-clamp-1 group-hover:text-primary transition-colors">
-                {song.title}
-              </h2>
-              <p className="text-sm opacity-70 line-clamp-1">by {song.artist}</p>
-              <div className="text-[11px] opacity-50 italic">
-                Album: {song.albumTitle}
+            <div className="card-body p-4 space-y-2">
+              <div className="space-y-1">
+                <h2 className="card-title text-base font-bold line-clamp-1 group-hover:text-primary transition-colors">
+                  {song.title}
+                </h2>
+                <p className="text-sm opacity-70 line-clamp-1">by {song.artist}</p>
+                <div className="text-[11px] opacity-50 italic">
+                  Album: {song.albumTitle}
+                </div>
+                <p className="text-xs line-clamp-2 bg-base-200 p-2 rounded mt-2 opacity-80">
+                  "{song.reviewText}"
+                </p>
               </div>
-              <p className="text-xs line-clamp-2 bg-base-200 p-2 rounded mt-2 opacity-80">
-                "{song.reviewText}"
-              </p>
+
+              {playingId === song.id && (
+                <div className="w-full space-y-1.5 pt-2 border-t border-base-200 animate-fadeIn">
+                  <div className="flex items-end justify-between text-[10px] font-mono opacity-60 px-0.5">
+                    <div className="flex items-end gap-0.5 h-3">
+                      <div className="w-0.5 bg-primary rounded animate-[bounce_0.5s_infinite_100ms] h-2"></div>
+                      <div className="w-0.5 bg-primary rounded animate-[bounce_0.5s_infinite_300ms] h-full"></div>
+                      <div className="w-0.5 bg-primary rounded animate-[bounce_0.5s_infinite_200ms] h-3"></div>
+                    </div>
+                    <span>Playing Tones...</span>
+                  </div>
+                  <div className="w-full bg-base-300 h-1 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-primary h-full transition-all duration-30 ease-linear"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}

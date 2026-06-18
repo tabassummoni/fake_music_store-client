@@ -59,7 +59,6 @@ function App() {
           <SongTable
             songs={songs}
             params={params}
-            setParams={setParams}
             loading={loading}
           />
         ) : (
