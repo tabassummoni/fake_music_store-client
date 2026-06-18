@@ -21,7 +21,6 @@ function App() {
       <header className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 gap-4">
         <div>
           <h1 className="text-3xl font-black text-primary tracking-tight">🎵 FAKE MUSIC STORE</h1>
-          <p className="text-xs opacity-60 mt-1">Clean Modular Architecture (No Mess inside App.jsx)</p>
         </div>
 
         <div className="tabs tabs-boxed shadow-sm">
