@@ -70,6 +70,27 @@ function App() {
             loading={loading}
           />
         )}
+        {params.viewMode === 'table' && (
+          <div className="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-base-200">
+            <button 
+              className="btn btn-sm btn-outline"
+              disabled={params.page <= 1 || loading}
+              onClick={() => setParams(prev => ({ ...prev, page: prev.page - 1 }))}
+            >
+              ◀️ Previous
+            </button>
+            <span className="font-mono text-sm font-bold bg-base-200 px-3 py-1 rounded-md">
+              Page {params.page}
+            </span>
+            <button 
+              className="btn btn-sm btn-outline"
+              disabled={loading || songs.length < 20}
+              onClick={() => setParams(prev => ({ ...prev, page: prev.page + 1 }))}
+            >
+              Next ▶️
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
