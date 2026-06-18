@@ -10,7 +10,7 @@ export default function useSongs(params) {
       setLoading(true);
       setError(null);
       try {
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
+        const baseUrl = import.meta.env.VITE_API_URL || 'https://fake-music-store-server.onrender.com/api';
         const query = new URLSearchParams({
           locale: params.locale,
           seed: params.seed,
