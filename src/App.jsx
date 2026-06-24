@@ -19,15 +19,7 @@ function App() {
   const [activeAudio, setActiveAudio] = useState(null);
   const [audioLoadingId, setAudioLoadingId] = useState(null);
 
-  // 🔗 ব্যাকএন্ড সার্ভারের ডিরেক্ট ৪ নম্বর লিংক (Vercel Settings এর ঝামেলা এড়াতে)
-  const BACKEND_URL = "https://fake-music-store-server-4.onrender.com/api";
-
-  // কাস্টম হুকে প্যারামিটার হিসেবে সরাসরি ব্যাকএন্ড ইউআরএল ওভাররাইড করা
-  const { songs, loading, error } = useSongs({ ...params, backendUrl: BACKEND_URL });
-
-  const getAudioUrl = (songSeed) => {
-    return `${BACKEND_URL}/songs/play/${songSeed}`;
-  };
+  const { songs, loading, error } = useSongs(params);
 
   const handlePlay = async (song) => {
     if (playingId === song.id) {
@@ -43,7 +35,8 @@ function App() {
 
     try {
       setAudioLoadingId(song.id);
-      const audioUrl = getAudioUrl(song.songSeed);
+      
+      const audioUrl = `https://fake-music-store-server-4.onrender.com/api/songs/play/${song.songSeed}`;
       const audio = new Audio(audioUrl);
       
       const updateProgress = () => {
