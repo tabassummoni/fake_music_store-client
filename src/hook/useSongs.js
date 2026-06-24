@@ -11,30 +11,31 @@ export default function useSongs(params) {
     const fetchSongs = async () => {
       setLoading(true);
       try {
-        const url = `http://localhost:5005/api/songs?locale=${params.locale}&seed=${params.seed}&page=${params.page}&likes=${params.likes}`;
+        const baseUrl = "https://fake-music-store-server-4.onrender.com/api";
+        const url = `${baseUrl}/songs?locale=${params.locale}&seed=${params.seed}&page=${params.page}&likes=${params.likes}`;
+        
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch data from API');
         
         const responseData = await res.json();
         
         if (isMounted) {
-          // ব্যাকএন্ড অ্যারে পাঠাক বা অবজেক্ট, ডেটা সেফলি পার্স করা
           const incomingSongs = Array.isArray(responseData) 
             ? responseData 
             : (responseData.data || responseData.songs || []);
 
           if (params.viewMode === 'gallery' && params.page > 1) {
-            // গ্যালারিতে স্ক্রোল করলে নতুন গানগুলো আগের গানের নিচে জমা হবে
             setSongs(prev => [...prev, ...incomingSongs]);
           } else {
-            // টেবিল ভিউ অথবা প্রথম পেজের জন্য ডেটা সরাসরি সেট হবে
-            // (এটি অ্যাসিনক্রোনাসলি ডেটা আসার পর চলায় কোনো রেন্ডার লুপ তৈরি করবে না)
             setSongs(incomingSongs);
           }
           setError(null);
         }
       } catch (err) {
-        if (isMounted) setError(err.message);
+        if (isMounted) {
+          console.error("Fetch error details:", err);
+          setError('Failed to fetch');
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
