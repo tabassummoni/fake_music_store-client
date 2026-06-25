@@ -3,7 +3,6 @@ import Toolbar from './components/Toolbar'
 import SongTable from './components/SongTable'
 import useSongs from './hook/useSongs'
 import SongGallery from './components/SongGallery'
-import { playSongPreview, stopPreview } from './utils/audioController' // আপনার সঠিক ফাইল পাথ দিন
 import './App.css'
 
 function App() {
@@ -21,28 +20,60 @@ function App() {
 
   const { songs, loading, error } = useSongs(params);
 
-  const handlePlay = (song) => {
-    const targetSeed = song.songSeed || song.seed || song.id;
+  const stopAudio = () => {
+    if (audioRef.current) {
+      if (audioRef.current._handleTimeUpdate) {
+        audioRef.current.removeEventListener('timeupdate', audioRef.current._handleTimeUpdate);
+      }
+      if (audioRef.current._handleEnded) {
+        audioRef.current.removeEventListener('ended', audioRef.current._handleEnded);
+      }
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+  };
 
+  const handlePlay = (song) => {
     if (playingId === song.id) {
-      stopPreview(audioRef);
+      stopAudio();
       setPlayingId(null);
       setProgress(0);
-    } else {
-      playSongPreview(
-        targetSeed,
-        song.id,
-        setPlayingId,
-        setProgress,
-        audioRef,
-        (msg) => console.error(msg)
-      );
+      return;
     }
+
+    stopAudio();
+
+    const targetSeed = song.songSeed || song.seed || song.id;
+    const audio = new Audio(`https://fake-music-store-server-4.onrender.com/api/songs/play/${targetSeed}`);
+    audioRef.current = audio;
+
+    audio._handleTimeUpdate = () => {
+      if (audio.duration) {
+        setProgress((audio.currentTime / audio.duration) * 100);
+      }
+    };
+
+    audio._handleEnded = () => {
+      setPlayingId(null);
+      setProgress(0);
+    };
+
+    audio.addEventListener('timeupdate', audio._handleTimeUpdate);
+    audio.addEventListener('ended', audio._handleEnded);
+
+    audio.play()
+      .then(() => {
+        setPlayingId(song.id);
+      })
+      .catch(err => {
+        console.error("Playback failed:", err);
+        setPlayingId(null);
+      });
   };
 
   useEffect(() => {
     return () => {
-      stopPreview(audioRef);
+      stopAudio();
     };
   }, [params.viewMode, params.page]);
 
