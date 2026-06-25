@@ -43,8 +43,8 @@ function App() {
 
     stopAudio();
 
-    const targetSeed = song.songSeed || song.seed || song.id;
-    const audio = new Audio(`https://fake-music-store-server-4.onrender.com/api/songs/play/${targetSeed}`);
+    const audioUrl = `https://fake-music-store-server-4.onrender.com/api/songs/play/${song.songSeed}`;
+    const audio = new Audio(audioUrl);
     audioRef.current = audio;
 
     audio._handleTimeUpdate = () => {
