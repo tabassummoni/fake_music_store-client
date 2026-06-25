@@ -45,7 +45,7 @@ function App() {
     stopAudio();
 
     setAudioLoadingId(song.id);
-    const audioUrl = `https://fake-music-store-server-4.onrender.com/api/songs/play/${song.songSeed}`;
+    const audioUrl = `https://fake-music-store-server-4.onrender.com/api/preview/${song.songSeed}`;
     const audio = new Audio(audioUrl);
     audioRef.current = audio;
 
@@ -72,6 +72,7 @@ function App() {
         console.error("Playback failed:", err);
         setPlayingId(null);
         setAudioLoadingId(null);
+        alert("Audio preview could not be played. The file may be corrupt or the server may be unavailable.");
       });
   };
 
