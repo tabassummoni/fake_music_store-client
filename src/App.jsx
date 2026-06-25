@@ -7,7 +7,7 @@ import './App.css'
 
 function App() {
   const [params, setParams] = useState({
-    locale: 'en_US', // Changed from 'en' to 'en_US' for consistency
+    locale: 'en',
     seed: '42',
     likes: 3.5,
     page: 1,
@@ -17,7 +17,6 @@ function App() {
   const [playingId, setPlayingId] = useState(null);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
-  const [audioLoadingId, setAudioLoadingId] = useState(null);
 
   const { songs, loading, error } = useSongs(params);
 
@@ -44,8 +43,8 @@ function App() {
 
     stopAudio();
 
-    setAudioLoadingId(song.id);
-    const audioUrl = `https://fake-music-store-server-4.onrender.com/api/preview/${song.songSeed}`;
+    // 🔗 এখানে আপনার নতুন ৫ নম্বর রেন্ডার ব্যাকএন্ডের লিংকটি বসানো হয়েছে
+    const audioUrl = `https://fake-music-store-server-5.onrender.com/api/songs/${song.songSeed}/audio`;
     const audio = new Audio(audioUrl);
     audioRef.current = audio;
 
@@ -66,13 +65,10 @@ function App() {
     audio.play()
       .then(() => {
         setPlayingId(song.id);
-        setAudioLoadingId(null);
       })
       .catch(err => {
         console.error("Playback failed:", err);
         setPlayingId(null);
-        setAudioLoadingId(null);
-        alert("Audio preview could not be played. The file may be corrupt or the server may be unavailable.");
       });
   };
 
@@ -128,7 +124,7 @@ function App() {
             playingId={playingId}
             progress={progress}
             onPlay={handlePlay}
-            audioLoadingId={audioLoadingId}
+            audioLoadingId={null}
           />
         ) : (
           <SongGallery
@@ -139,7 +135,7 @@ function App() {
             playingId={playingId}
             progress={progress}
             onPlay={handlePlay}
-            audioLoadingId={audioLoadingId}
+            audioLoadingId={null}
           />
         )}
         

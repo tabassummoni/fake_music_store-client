@@ -12,20 +12,8 @@ export function stopPreview(audioRef) {
 export function playSongPreview(seed, songId, setPlayingId, setProgress, audioRef, onError) {
   stopPreview(audioRef);
 
-  const audio = new Audio(`https://fake-music-store-server-4.onrender.com/api/songs/play/${seed}`);
+  const audio = new Audio(`https://fake-music-store-server-4.onrender.com/api/preview/${seed}`);
   audioRef.current = audio;
-
-  audio.play()
-    .then(() => {
-      setPlayingId(songId);
-    })
-    .catch(err => {
-      console.error("Error playing audio:", err);
-      if (onError) {
-        onError("Audio preview could not be played. The file may be corrupt or unsupported.");
-      }
-      setPlayingId(null);
-    });
 
   // Store handlers on the audio object so they can be removed later
   audio._handleTimeUpdate = () => {
@@ -39,4 +27,18 @@ export function playSongPreview(seed, songId, setPlayingId, setProgress, audioRe
 
   audio.addEventListener('timeupdate', audio._handleTimeUpdate);
   audio.addEventListener('ended', audio._handleEnded);
+
+  return audio.play()
+    .then(() => {
+      setPlayingId(songId);
+    })
+    .catch(err => {
+      console.error("Error playing audio:", err);
+      if (onError) {
+        onError("Audio preview could not be played. The file may be corrupt or unsupported.");
+      }
+      setPlayingId(null);
+      // re-throw so the caller's .catch/.finally can trigger
+      throw err;
+    });
 }
