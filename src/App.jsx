@@ -7,7 +7,7 @@ import './App.css'
 
 function App() {
   const [params, setParams] = useState({
-    locale: 'en',
+    locale: 'en_US', // Changed from 'en' to 'en_US' for consistency
     seed: '42',
     likes: 3.5,
     page: 1,

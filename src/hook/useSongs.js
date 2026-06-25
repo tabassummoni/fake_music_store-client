@@ -11,7 +11,8 @@ export default function useSongs(params) {
     const fetchSongs = async () => {
       setLoading(true);
       try {
-        const baseUrl = "https://fake-music-store-server-4.onrender.com/api";
+        // Use environment variable for the base URL
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://fake-music-store-server-4.onrender.com/api";
         const url = `${baseUrl}/songs?locale=${params.locale}&seed=${params.seed}&page=${params.page}&likes=${params.likes}`;
         
         const res = await fetch(url);

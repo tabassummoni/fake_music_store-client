@@ -12,7 +12,7 @@ export function stopPreview(audioRef) {
 export function playSongPreview(seed, songId, setPlayingId, setProgress, audioRef, onError) {
   stopPreview(audioRef);
 
-  const audio = new Audio(`http://localhost:5005/api/preview/${seed}`);
+  const audio = new Audio(`https://fake-music-store-server-4.onrender.com/api/songs/play/${seed}`);
   audioRef.current = audio;
 
   audio.play()
