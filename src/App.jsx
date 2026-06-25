@@ -17,6 +17,7 @@ function App() {
   const [playingId, setPlayingId] = useState(null);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
+  const [audioLoadingId, setAudioLoadingId] = useState(null);
 
   const { songs, loading, error } = useSongs(params);
 
@@ -43,6 +44,7 @@ function App() {
 
     stopAudio();
 
+    setAudioLoadingId(song.id);
     const audioUrl = `https://fake-music-store-server-4.onrender.com/api/songs/play/${song.songSeed}`;
     const audio = new Audio(audioUrl);
     audioRef.current = audio;
@@ -64,10 +66,12 @@ function App() {
     audio.play()
       .then(() => {
         setPlayingId(song.id);
+        setAudioLoadingId(null);
       })
       .catch(err => {
         console.error("Playback failed:", err);
         setPlayingId(null);
+        setAudioLoadingId(null);
       });
   };
 
@@ -123,7 +127,7 @@ function App() {
             playingId={playingId}
             progress={progress}
             onPlay={handlePlay}
-            audioLoadingId={null}
+            audioLoadingId={audioLoadingId}
           />
         ) : (
           <SongGallery
@@ -134,7 +138,7 @@ function App() {
             playingId={playingId}
             progress={progress}
             onPlay={handlePlay}
-            audioLoadingId={null}
+            audioLoadingId={audioLoadingId}
           />
         )}
         
